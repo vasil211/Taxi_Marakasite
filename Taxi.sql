@@ -2,12 +2,6 @@ drop database if exists taxi;
 create database Taxi;
 Use Taxi;
 
-CREATE TABLE rideState (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    state smallint NOT NULL
-);
-
-
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
     roleName VARCHAR(20) NOT NULL
