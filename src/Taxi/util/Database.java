@@ -6,12 +6,16 @@ public class Database {
           try  {
               Class.forName("com.mysql.jdbc.Driver");
               Connection con = DriverManager.getConnection
-                      ("jdbc:mysql://localhost:3306/Taxi",
+                      ("jdbc:mysql://localhost:3306/taxi",
                       "root", "toor");
+
+              System.out.println("fuck1");
               return con;
           }
           catch(Exception ex) {
               System.out.println("Database.getConnection() Error -->" + ex.getMessage());
+
+              System.out.println("fuck2");
               return null;
           }
       }

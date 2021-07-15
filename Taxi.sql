@@ -1,6 +1,6 @@
 drop database if exists taxi;
-create database Taxi;
-Use Taxi;
+create database taxi;
+Use taxi;
 
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +34,7 @@ CREATE TABLE rides (
     time_Of_End Time null,
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
     ride_State smallint NOT NULL,
-    start_Location varchar(250) null,
+    start_Location varchar(250) null,rolerolerolerole
     end_location varchar(250) null,
     price double null,
     CONSTRAINT FOREIGN KEY (user_id)

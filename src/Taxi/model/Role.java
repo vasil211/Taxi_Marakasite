@@ -3,6 +3,7 @@ package Taxi.model;
 public class Role {
     private int id;
     private String roleName;
+
     public int getId() {
         return id;
     }
