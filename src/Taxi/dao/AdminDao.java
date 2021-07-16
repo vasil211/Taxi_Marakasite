@@ -1,7 +1,7 @@
 package Taxi.dao;
 
-import Taxi.model.Role;
 import Taxi.util.Database;
+import Taxi.model.Role;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
@@ -9,11 +9,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class User {
+
+public class AdminDao {
 
     private Connection connection;
 
-    public User() {
+    public AdminDao() {
         super();
         connection = Database.getConnection();
     }
@@ -21,7 +22,7 @@ public class User {
 
     public boolean addRole(String role ) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into role(roleName) values (?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into role(role_Name) values (?)");
 
             preparedStatement.setString(1, role);
             preparedStatement.executeUpdate();
@@ -32,19 +33,4 @@ public class User {
         }
     }
 
-
-
-
-    public String hash(String pass) {
-
-        MessageDigest md;
-        byte[] hash = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-            hash = md.digest(pass.getBytes("UTF-8"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return DatatypeConverter.printHexBinary(hash);
-    }
 }

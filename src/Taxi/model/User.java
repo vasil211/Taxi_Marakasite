@@ -5,7 +5,7 @@ import java.util.Date;
 public class User {
     private int id;
     private Role role;
-    private String uname;
+    private String userName;
     private String password;
     private String firstName;
     private String lastName;
@@ -15,9 +15,15 @@ public class User {
     private double rating;
     private short state;
 
+    public User() {
+
+    }
+
+
     public int getId() {
         return id;
     }
+
 
     public Role getRole() {
         return role;
@@ -27,12 +33,12 @@ public class User {
         this.role = role;
     }
 
-    public String getUname() {
-        return uname;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUname(String uname) {
-        this.uname = uname;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -99,15 +105,17 @@ public class User {
         this.state = state;
     }
 
-    public User(int id, String uname, String password, String firstName, String lastName, String phone, String email, String egn) {
+    public User(int id, Role role, String userName, String password, String firstName, String lastName, String phone, String email, String egn, double rating, short state) {
         this.id = id;
-        this.uname = uname;
+        this.role = role;
+        this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.egn = egn;
+        this.rating = rating;
+        this.state = state;
     }
-
 }
