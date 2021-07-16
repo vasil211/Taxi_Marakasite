@@ -31,7 +31,7 @@ public class Main {
                     System.out.println("\n user\n");
 
                 }
-                
+
             }
 
         }

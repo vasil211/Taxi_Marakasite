@@ -28,14 +28,14 @@ create TABLE cars(
   id INT AUTO_INCREMENT PRIMARY KEY,
   driver_id int null,
   CONSTRAINT FOREIGN KEY (driver_id)
-        REFERENCES userDao (id)
+        REFERENCES users (id)
 );
 
 CREATE TABLE rides (
     id INT AUTO_INCREMENT PRIMARY KEY,
 	user_id INT NOT NULL,
     driver_id int not null,
-    rating smallint null,
+    rating double null,
     car_id int not null,
     time_Of_Order TIME null,
     time_Of_Start Time null,
@@ -46,9 +46,9 @@ CREATE TABLE rides (
     end_Location varchar(250) null,
     price double null,
     CONSTRAINT FOREIGN KEY (user_id)
-        REFERENCES userDao (id),
+        REFERENCES users (id),
 	CONSTRAINT FOREIGN KEY (driver_id)
-        REFERENCES userDao (id),
+        REFERENCES users (id),
 	CONSTRAINT FOREIGN KEY (car_id)
         REFERENCES cars (id)
 );
@@ -64,7 +64,7 @@ values(02,'driver');
 insert into role(id,role_Name)
 values(03,'userDao');
 
-insert into userDao(role_id, user_Name, password, first_Name, last_name, phone, email, egn)
+insert into users(role_id, user_Name, password, first_Name, last_Name, phone, email, egn)
 values(01, "admin1", "e00cf25ad42683b3df678c61f42c6bda", "admin1", "admin1", 0876547812, "admin1@abv.bg", 0023234115),
 (01, "admin2", "c84258e9c39059a89ab77d846ddab909", "admin2", "admin2", 0123545231, "admin2@abv.bg", 0123411123),
 (02, "driver1", "b85aef08608180db9d4ddad38ae40545", "driver1", "driver1", 012304123, "driver1@abv.bg", 123141111),
