@@ -1,6 +1,6 @@
 drop database if exists taxi;
-create database Taxi;
-Use Taxi;
+create database taxi;
+Use taxi;
 
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
