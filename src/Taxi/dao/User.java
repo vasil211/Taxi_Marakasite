@@ -21,8 +21,8 @@ public class User {
 
     public boolean addRole(String role ) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "insert into role(roleName) values (?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into role(roleName) values (?)");
+
             preparedStatement.setString(1, role);
             preparedStatement.executeUpdate();
             return true;

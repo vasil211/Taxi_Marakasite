@@ -4,7 +4,7 @@ import java.sql.DriverManager;
 public class Database {
       public static Connection getConnection() {
           try  {
-              Class.forName("com.mysql.jdbc.Driver");
+              Class.forName("com.mysql.cj.jdbc.Driver");
               Connection con = DriverManager.getConnection
                       ("jdbc:mysql://localhost:3306/taxi",
                       "root", "toor");
@@ -14,7 +14,7 @@ public class Database {
           }
           catch(Exception ex) {
               System.out.println("Database.getConnection() Error -->" + ex.getMessage());
-
+             // ex.printStackTrace();
               System.out.println("fuck2");
               return null;
           }
@@ -25,6 +25,7 @@ public class Database {
               con.close();
           }
           catch(Exception ex) {
+              ex.printStackTrace();
           }
       }
 }
