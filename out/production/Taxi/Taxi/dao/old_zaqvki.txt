@@ -1,0 +1,942 @@
+package com.restaurant.dao;
+
+import java.sql.*;
+import java.util.*;
+import com.restaurant.model.Menu;
+import com.restaurant.util.Database;
+
+public class MenuDao {
+	private Connection connection;
+
+	public MenuDao() {
+		connection = Database.getConnection();
+	}
+
+	public void checkFood(Menu menu) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("select name from user where name = ?");
+			ps.setString(1, menu.getName());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) // found
+			{
+				updateFood(menu);
+			} else {
+				addFood(menu);
+			}
+		} catch (Exception ex) {
+			System.out.println("Error in check() -->" + ex.getMessage());
+		}
+	}
+
+	public Menu checkIfFoodExist(String name, String foodType) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("select * from menu where name = ? and foodType = ?");
+			ps.setString(1, name);
+			ps.setString(2, foodType);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Menu menu = new Menu();
+				menu.setName(rs.getString("uname"));
+				menu.setFoodType(rs.getString("foodType"));
+				return menu;
+			} else {
+				return null;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean addFood(Menu menu) {
+		try {
+			PreparedStatement preparedStatement = connection
+					.prepareStatement("insert into menu(name,foodType,description,price) values (?, ?, ?, ?)");
+
+			preparedStatement.setString(1, menu.getName());
+			preparedStatement.setString(2, menu.getFoodType());
+			preparedStatement.setString(3, menu.getDescription());
+			preparedStatement.setDouble(4, menu.getPrice());
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public void deleteFood(int menu_Id) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("delete from menu where id=?");
+			preparedStatement.setInt(1, menu_Id);
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateFood(Menu menu) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(
+					"update menu set name=?, foodType=?, description= ?, price= ? " + "where id= ?");
+
+			preparedStatement.setString(1, menu.getName());
+			preparedStatement.setString(2, menu.getFoodType());
+			preparedStatement.setString(3, menu.getDescription());
+			preparedStatement.setDouble(4, menu.getPrice());
+			preparedStatement.setInt(5, menu.getId());
+
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<Menu> getAllFood() {
+		List<Menu> menu = new ArrayList<Menu>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("select * from menu");
+			while (rs.next()) {
+				Menu menu1 = new Menu();
+				menu1.setName(rs.getString("name"));
+				menu1.setFoodType(rs.getString("foodType"));
+				menu1.setDescription(rs.getString("description"));
+				menu1.setPrice(rs.getDouble("price"));
+				menu.add(menu1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return menu;
+	}
+
+	public Menu getFoodByID(int menu_Id) {
+		Menu menu = new Menu();
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from menu where id=?");
+			preparedStatement.setInt(1, menu_Id);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				menu.setName(rs.getString("name"));
+				menu.setFoodType(rs.getString("foodType"));
+				menu.setDescription(rs.getString("description"));
+				menu.setPrice(rs.getDouble("price"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+ 
+		return menu;
+	}
+
+	public List<Menu> getAllFoodByType(String foodType) {
+		List<Menu> menu = new ArrayList<Menu>();
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from menu where foodType=?");
+			preparedStatement.setString(1, foodType);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				Menu menu1 = new Menu();
+				menu1.setName(rs.getString("name"));
+				menu1.setFoodType(rs.getString("foodType"));
+				menu1.setDescription(rs.getString("description"));
+				menu1.setPrice(rs.getDouble("price"));
+				menu.add(menu1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return menu;
+	}
+
+}
+package com.restaurant.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.restaurant.model.Menu;
+import com.restaurant.model.Order_Menu;
+import com.restaurant.util.Database;
+
+public class Order_MenuDao {
+	private Connection connection;
+
+public Order_MenuDao() {
+	connection = Database.getConnection();
+}
+
+
+
+  public Order_Menu getFoodByOrderId(int orders_id) {
+	  
+	  Order_Menu order_menu = new Order_Menu();
+	  try {
+		  PreparedStatement preparedStatement = connection.prepareStatement("select * from menu_orders where orders_id=?");
+			preparedStatement.setInt(1, orders_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+		order_menu.getMenu().setId((rs.getInt("menu_id")));        
+	  
+			}
+  }catch (SQLException e) {
+		e.printStackTrace();
+	}
+	  return order_menu;
+  }
+
+  public Order_Menu getFoodNameById(int menu_Id) {
+	  Order_Menu order_menu = new Order_Menu();
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from menu where id=?");
+			preparedStatement.setInt(1, menu_Id);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				order_menu.getMenu().setName("name");       
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return order_menu;
+	}
+}
+package com.restaurant.dao;
+
+import java.sql.*;
+import java.util.*;
+
+import com.restaurant.model.Order;
+import com.restaurant.model.OrderState;
+import com.restaurant.model.Role;
+import com.restaurant.model.Table;
+import com.restaurant.model.User;
+import com.restaurant.util.Database;
+
+public class OrderDao {
+	private Connection connection;
+
+	public OrderDao() {
+		connection = Database.getConnection();
+	}
+
+	public boolean addOrder(Order order) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(
+					"insert into orders(table_id, timeOfOrder, timeOfCook, timeOfPaymet, date, user_id, orderState_id) values (?, ?, ?, ?, ?, ?, 1)");
+
+			preparedStatement.setInt(1, order.getTable().getId());
+			preparedStatement.setTime(2, order.getTimeOfOrder());
+			preparedStatement.setTime(3, order.getTimeOfCook());
+			preparedStatement.setTime(4, order.getTimeOfPayment());
+			preparedStatement.setDate(5, order.getDate());
+			preparedStatement.setInt(6, order.getUser().getId());
+			preparedStatement.setInt(7, order.getOrderState().getId());
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public void updateOrder(Order order) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(
+					"update orders set table_id=?, timeOfOrder=?, timeOfCook=?, timeOfPayment=?, user_id=?, orderState_id=?"
+							+ "where id=?");
+			preparedStatement.setInt(1, order.getTable().getId());
+			preparedStatement.setTime(2, order.getTimeOfOrder());
+			preparedStatement.setTime(3, order.getTimeOfCook());
+			preparedStatement.setTime(4, order.getTimeOfPayment());
+			preparedStatement.setInt(5, order.getUser().getId());
+			preparedStatement.setInt(6, order.getOrderState().getId());
+			preparedStatement.setInt(7, order.getOrderId());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<Order> getAllOrders() {
+		List<Order> orders = new ArrayList<Order>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM restaurant.orders");
+			while (rs.next()) {
+				Order order = new Order();
+
+				int tableId = rs.getInt("table_id");
+				int user_id = rs.getInt("user_id");
+
+				TableDao tableDao = new TableDao();
+				Table table = tableDao.getTableById(tableId);
+				UserDao userDao = new UserDao();
+				User user = userDao.getUserById(user_id);
+				order.setTable(table);
+				order.setTimeOfOrder(rs.getTime("timeOfOrder"));
+				order.setTimeOfCook(rs.getTime("timeOfCook"));
+				order.setTimeOfPayment(rs.getTime("timeOfPayment"));
+				order.setDate(rs.getDate("date"));
+				order.setUser(user);
+				order.getOrderState().setId(rs.getInt("orderState_id"));
+				orders.add(order);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return orders;
+	}
+
+	public List<Order> getAllWaitingOrders() {
+		List<Order> orders = new ArrayList<Order>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM restaurant.orders where orderState_id=1");
+			while (rs.next()) {
+				Order order = new Order();
+				
+				int tableId = rs.getInt("table_id");
+				int user_id = rs.getInt("user_id");
+
+				TableDao tableDao = new TableDao();
+				Table table = tableDao.getTableById(tableId);
+				UserDao userDao = new UserDao();
+				User user = userDao.getUserById(user_id);
+				order.setOrderId(rs.getInt("id"));
+				order.setTable(table);
+				order.setTimeOfOrder(rs.getTime("timeOfOrder"));
+				order.setTimeOfCook(rs.getTime("timeOfCook"));
+				order.setTimeOfPayment(rs.getTime("timeOfPayment"));
+				order.setDate(rs.getDate("date"));
+				order.setUser(user);
+				orders.add(order);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return orders;
+	}
+
+	public Order getOrder(int id) {
+		Order order = null;
+		try {
+			PreparedStatement ps = connection.prepareStatement("select * from orders where id=?");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) // found
+			{
+				int userId = rs.getInt("user_id");
+				int tableId = rs.getInt("table_id");
+				// int orderStateId = rs.getInt("orderState_id");
+
+				order = new Order();
+				TableDao tableDao = new TableDao();
+				Table table = tableDao.getTableById(tableId);
+				UserDao userDao = new UserDao();
+				User user = userDao.getUserById(userId);
+				// OrderStateDao orderStateDao = new OrderStateDao();
+				// OrderStateDao orderState = new OrderStateDao();
+
+				order.setTable(table);
+				order.setTimeOfOrder(rs.getTime("timeOfOrder"));
+				order.setTimeOfCook(rs.getTime("timeOfCook"));
+				order.setTimeOfPayment(rs.getTime("timeOfPayment"));
+				order.setDate(rs.getDate("date"));
+				order.setUser(user);
+				order.getOrderState().setId(rs.getInt("orderState_id"));
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return order;
+	}
+
+	public Order getOrderById(int orderId) {
+		Order order = null;
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from orders where id=?");
+			preparedStatement.setInt(1, orderId);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				order = new Order();
+				order.getTable().setId(rs.getInt("table_id"));
+				order.setTimeOfOrder(rs.getTime("timeOfOrder"));
+				order.setTimeOfCook(rs.getTime("timeOfCook"));
+				order.setTimeOfPayment(rs.getTime("timeOfPayment"));
+				order.setDate(rs.getDate("date"));
+				order.getUser().setId(rs.getInt("user_id"));
+				order.getOrderState().setId(rs.getInt("orderState_id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return order;
+	}
+}
+package com.restaurant.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.restaurant.model.OrderState;
+import com.restaurant.model.User;
+import com.restaurant.util.Database;
+
+public class OrderStateDao {
+	
+	private Connection connection;
+
+	public OrderStateDao() {
+		connection = Database.getConnection();
+	}
+	
+	
+	
+	
+	public OrderState getOrderStateById(int id) {
+		OrderState orderState = null;
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from orderstate where id=?");
+			preparedStatement.setInt(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				orderState = new OrderState();
+				orderState.setState(rs.getString("state"));
+			
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return orderState;
+	}
+}
+package com.restaurant.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.restaurant.model.Role;
+import com.restaurant.util.Database;
+
+public class RoleDao {
+
+	private Connection connection;
+
+	public RoleDao() {
+		connection = Database.getConnection();
+
+	}
+
+	public Role getRoleById(int role_id) {
+
+		Role role = null;
+		try {
+
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from role where id = ? ");
+			preparedStatement.setInt(1, role_id);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+
+				role = new Role();
+				role.setId(rs.getInt("id"));
+				role.setRoleName(rs.getString("roleName"));
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return role;
+	}
+
+}
+package com.restaurant.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.restaurant.model.Table;
+
+import com.restaurant.util.Database;
+
+public class TableDao {
+
+	private Connection connection;
+
+	public TableDao() {
+		connection = Database.getConnection();
+	}
+
+	public boolean addTable(Table table) { // chairCount
+		try {
+			PreparedStatement preparedStatement = connection
+					.prepareStatement("insert into tables(chairCount) values (?)");
+
+			preparedStatement.setInt(1, table.getChairCount());
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public void deleteTable(int id) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("delete from tables where id=?");
+			preparedStatement.setInt(1, id);
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateTable(Table table) {
+		try {
+			PreparedStatement preparedStatement = connection
+					.prepareStatement("update tables set chairCount=? " + "where tables.id= ?");
+
+			preparedStatement.setInt(1, table.getChairCount());
+			preparedStatement.setInt(2, table.getId());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<Table> getAllTables() {
+		List<Table> tables = new ArrayList<Table>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM tables ");
+			while (rs.next()) {
+				Table table = new Table();
+
+				table.setId(rs.getInt("id"));
+				table.setChairCount(rs.getInt("chairCount"));
+				tables.add(table);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return tables;
+	}
+
+	public Table getTableById(int table_Id) {
+		Table table = new Table();
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from tables where tables.id=?");
+			preparedStatement.setInt(1, table_Id);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				table.setId(rs.getInt("id"));
+				table.setChairCount(rs.getInt("chairCount"));
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return table;
+	}
+
+	public void checkTable(Table table) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("select id from tables where id = ?");
+			ps.setInt(1, table.getId());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) // found
+			{
+				updateTable(table);
+			} else {
+				addTable(table);
+			}
+		} catch (Exception ex) {
+			System.out.println("Error in check() -->" + ex.getMessage());
+		}
+	}
+
+	public Table checkIfTableExist(int id, int chairCount) {
+		try {
+			PreparedStatement ps = connection
+					.prepareStatement("select * from tables where tables.id = ? and tables.chairCount=?");
+			ps.setInt(1, id);
+			ps.setInt(2, chairCount);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Table table = new Table();
+				table.setId(rs.getInt("id"));
+				table.setChairCount(rs.getInt("chairCount"));
+				return table;
+			} else {
+				return null;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+}
+package com.restaurant.dao;
+
+import java.security.MessageDigest;
+import java.sql.*;
+import java.util.*;
+
+import javax.xml.bind.DatatypeConverter;
+
+import com.restaurant.model.Role;
+import org.apache.commons.validator.routines.EmailValidator;
+
+import com.restaurant.model.User;
+import com.restaurant.util.Database;
+
+public class UserDao {
+
+	private Connection connection;
+
+	public UserDao() {
+		connection = Database.getConnection();
+	}
+
+	public String validEmail(String email) {
+
+		boolean valid = EmailValidator.getInstance().isValid(email);
+
+		if (valid) {
+			return email;
+		} else {
+
+			return null;
+		}
+	}
+
+	public void checkUser(User user) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("select uname from users where uname = ?");
+			ps.setString(1, user.getUname());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) // found
+			{
+				updateUser(user);
+			} else {
+				addUser(user);
+			}
+		} catch (Exception ex) {
+			System.out.println("Error in check() -->" + ex.getMessage());
+		}
+	}
+
+	public User checkIfUserExist(String uname, String pass) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("select * from user where uname = ? and password = ?");
+			ps.setString(1, uname);
+			ps.setString(2, pass);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				User user = new User();
+				user.setUname(rs.getString("uname"));
+				//
+				RoleDao roleDao = new RoleDao();
+				int role_id = rs.getInt("role_id");
+				Role role = roleDao.getRoleById(role_id);
+				user.setRole(role);
+				//
+				return user;
+			} else {
+				return null;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean addUser(User user) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(
+					"insert into user(firstName,lastName,email,password,uname,phone,EGN,role_id) values (?, ?, ?, ?, ?, ?, ?, 2)");
+
+			preparedStatement.setString(1, user.getFirstName());
+			preparedStatement.setString(2, user.getLastName());
+			preparedStatement.setString(3, user.getEmail());
+			preparedStatement.setString(4, user.getPassword());
+			preparedStatement.setString(5, user.getUname());
+			preparedStatement.setString(6, user.getPhone());
+			preparedStatement.setString(7, user.getEGN());
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public String hash(String pass) {
+
+		MessageDigest md;
+		byte[] hash = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			hash = md.digest(pass.getBytes("UTF-8"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return DatatypeConverter.printHexBinary(hash);
+	}
+
+	public void deleteUser(String user_Id) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("delete from user where uname=?");
+			preparedStatement.setString(1, user_Id);
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateUser(User user) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(
+					"update user set email=?, role_id=?, firstName= ?, lastName= ? " + "where uname= ?");
+
+			preparedStatement.setString(1, user.getEmail());
+			preparedStatement.setInt(2, user.getRole().getId());
+			preparedStatement.setString(3, user.getFirstName());
+			preparedStatement.setString(4, user.getLastName());
+			preparedStatement.setString(5, user.getUname());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<User> getAllAdmins() {
+		List<User> users = new ArrayList<User>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM restaurant.user WHERE role_id = 1");
+			while (rs.next()) {
+				User user = new User();
+
+				user.setUname(rs.getString("uname"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setPhone(rs.getString("phone"));
+				user.setEGN(rs.getString("EGN"));
+				user.setEmail(rs.getString("email"));
+				user.setRegistration(rs.getDate("registration"));
+
+				RoleDao roleDao = new RoleDao();
+				int role_id = rs.getInt("role_id");
+				Role role = roleDao.getRoleById(role_id);
+				user.setRole(role);
+				users.add(user);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+
+	public List<User> getAllUsers() {
+		List<User> users = new ArrayList<User>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM restaurant.user WHERE role_id = 2");
+			while (rs.next()) {
+				User user = new User();
+
+				user.setUname(rs.getString("uname"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setPhone(rs.getString("phone"));
+				user.setEGN(rs.getString("EGN"));
+				user.setEmail(rs.getString("email"));
+				user.setRegistration(rs.getDate("registration"));
+
+				RoleDao roleDao = new RoleDao();
+				int role_id = rs.getInt("role_id");
+				Role role = roleDao.getRoleById(role_id);
+				user.setRole(role);
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return users;
+	}
+
+	public List<User> getAllCooks() {
+		List<User> users = new ArrayList<User>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM restaurant.user WHERE role_id = 3");
+			while (rs.next()) {
+				User user = new User();
+
+				user.setUname(rs.getString("uname"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setPhone(rs.getString("phone"));
+				user.setEGN(rs.getString("EGN"));
+				user.setEmail(rs.getString("email"));
+				user.setRegistration(rs.getDate("registration"));
+
+				RoleDao roleDao = new RoleDao();
+				int role_id = rs.getInt("role_id");
+				Role role = roleDao.getRoleById(role_id);
+				user.setRole(role);
+				users.add(user);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+
+	public List<User> getAllWaiters() {
+		List<User> users = new ArrayList<User>();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM restaurant.user WHERE role_id = 4");
+			while (rs.next()) {
+				User user = new User();
+
+				user.setUname(rs.getString("uname"));
+				user.setFirstName(rs.getString("firstName"));
+				user.setLastName(rs.getString("lastName"));
+				user.setPhone(rs.getString("phone"));
+				user.setEGN(rs.getString("EGN"));
+				user.setEmail(rs.getString("email"));
+				user.setRegistration(rs.getDate("registration"));
+
+				RoleDao roleDao = new RoleDao();
+				int role_id = rs.getInt("role_id");
+				Role role = roleDao.getRoleById(role_id);
+				user.setRole(role);
+				users.add(user);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+
+	public User getUserById(int user_id) {
+		User user = null;
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("select * from user where id=?");
+			preparedStatement.setInt(1, user_id);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				user = new User();
+				user.setUname(rs.getString("uname"));
+				user.setPassword(rs.getString("password"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
+
+	// public boolean UnameValidator(String uname) {
+	// try {
+	// PreparedStatement st = connection.prepareStatement("select * from user where
+	// uname = ?");
+	// ps.setString(1, .getUname());
+	// ResultSet r1 = st.executeQuery();
+	// String usernameCounter;
+	// if(r1.next()) {
+	// usernameCounter = r1.getString("uname");
+	// if(usernameCounter == uname) {
+	//
+	// System.out.println("It already exists!");
+	// usernameExists = true;
+	// }
+	// }
+	// }
+	// catch (SQLException e)
+	// {
+	// System.out.println("SQL Exception: "+ e.toString());
+	// }
+	//
+	// return usernameExists;
+	//
+	// }
+	// public boolean UnameValidator(String uname) {
+	//
+	// try {
+	// PreparedStatement ps = connection.prepareStatement("select * from user where
+	// uname = ?");
+	// ps.setString(1, uname);
+	// ResultSet rs = ps.executeQuery();
+	// if (true) {
+	//
+	// return uname;
+	// } else {
+	// return null;
+	// }
+	// } catch (Exception ex) {
+	// ex.printStackTrace();
+	// return null;
+	// }
+	// }
+	//
+	// }
+	//
+
+}
+

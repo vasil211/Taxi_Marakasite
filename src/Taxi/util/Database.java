@@ -7,7 +7,7 @@ public class Database {
               Class.forName("com.mysql.cj.jdbc.Driver");
               Connection con = DriverManager.getConnection
                       ("jdbc:mysql://localhost:3306/taxi",
-                      "admin", "admin");
+                      "root", "toor");
 
 
               return con;
