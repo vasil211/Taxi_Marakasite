@@ -6,6 +6,15 @@ import Taxi.model.User;
 
 import java.util.Scanner;
 
+
+
+//  registraciq (i vhod s google api)
+//  zaqvqvane na prevoz -- nachalen i kraen adres i vreme na vzimane
+//  pregled sys spisyka svobodni shofiori
+//  ocenqvane na shofior sled prikliuchen prevoz
+//  pregled na istoriqta pytivaniqta
+
+
 public class UserController {
 
     private UserDao daoUser;
