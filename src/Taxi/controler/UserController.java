@@ -43,19 +43,7 @@ public class UserController {
             user = daoUser.checkIfUserExist(username, password);
 
             System.out.println("\n User exists!\n");
-            System.out.println(user.getUserName());
-            System.out.println(user.getRole());
 
-            if(user.getRole() == 01){
-                System.out.println("\n admin\n");
-
-            }else if (user.getRole() == 02){
-                System.out.println("\n driver\n");
-
-            }else if (user.getRole() == 03){
-                System.out.println("\n user\n");
-
-            }
         }catch (Exception ex) {
             ex.printStackTrace();
         }
