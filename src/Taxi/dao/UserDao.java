@@ -11,6 +11,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+//  registraciq (i vhod s google api)
+//  zaqvqvane na prevoz -- nachalen i kraen adres i vreme na vzimane
+//  pregled sys spisyka svobodni shofiori
+//  ocenqvane na shofior sled prikliuchen prevoz
+//  pregled na istoriqta pytivaniqta
+
+
+
 public class UserDao {
 
     private Connection connection;
