@@ -1,6 +1,5 @@
 package Taxi.dao;
 
-
 import Taxi.model.User;
 import Taxi.util.Database;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -26,6 +25,26 @@ public class UserDao {
     public UserDao() {
         super();
         connection = Database.getConnection();
+    }
+
+    public boolean addUser(User user){
+        try{
+            PreparedStatement ps = connection.prepareStatement("insert into users(role_id, user_Name, password, first_Name, last_Name, phone, email, egn) values(?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            ps.setInt(1, user.getRole());
+            ps.setString(2,user.getUserName());
+            ps.setString(3, user.getPassword());
+            ps.setString(4, user.getFirstName());
+            ps.setString(5, user.getLastName());
+            ps.setString(6, user.getLastName());
+            ps.setString(7, user.getPhone());
+            ps.setString(8, user.getEmail());
+            ps.setString(9, user.getEgn());
+            ResultSet rs = ps.executeQuery();
+            return true;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 
 

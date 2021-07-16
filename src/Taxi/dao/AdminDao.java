@@ -19,17 +19,39 @@ public class AdminDao {
         connection = Database.getConnection();
     }
 
-//  add user
 //  update user
-//  dell user
 //  add car
 //  update car
-//  dell car
 //  get all waiting poruchki
 //  see all done poryschi
 //  add free driver to waiting porychka
 //  analiz na porychki na dnevna baza ???
 //  see ocenkite na driverite
+
+
+    public boolean deleteUser(String user_Id) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from users where id = ?");
+            preparedStatement.setString(1, user_Id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteCar(String car_Id) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from cars where id = ?");
+            preparedStatement.setString(1, car_Id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public boolean addRole(String role ) {
         try {
