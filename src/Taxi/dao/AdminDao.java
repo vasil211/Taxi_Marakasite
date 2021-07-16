@@ -1,7 +1,7 @@
 package Taxi.dao;
 
 import Taxi.util.Database;
-import Taxi.model.Role;
+
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;

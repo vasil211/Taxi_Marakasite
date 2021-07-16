@@ -1,6 +1,6 @@
 package Taxi.dao;
 
-import Taxi.model.Role;
+
 import Taxi.model.User;
 import Taxi.util.Database;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -23,22 +23,17 @@ public class UserDao {
 
     public  User checkIfUserExist(String userName, String password) {
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from user where user_Name = ? and password = ?");
+            PreparedStatement ps = connection.prepareStatement("select * from users where user_Name = ? and password = ?");
             ps.setString(1, userName);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 User user = new User();
                 user.setUserName(rs.getString("user_Name"));
-                //
-                Role role = new Role();
-                role.setId(rs.getInt("role_id"));
-//                role.setRoleName(rs.getString("role_Name"));
-                user.setRole(role);
-
+                user.setRole_id(rs.getInt("role_id"));
+                user.setId(rs.getInt("id"));
                 return user;
             } else {
-
                 return null;
             }
         } catch (Exception ex) {

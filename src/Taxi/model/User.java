@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class User {
     private int id;
-    private Role role;
+    private int role_id;
     private String userName;
     private String password;
     private String firstName;
@@ -24,13 +24,20 @@ public class User {
         return id;
     }
 
-
-    public Role getRole() {
-        return role;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRole_id(int role_id) {
+        this.role_id = role_id;
+    }
+
+    public int getRole() {
+        return role_id;
+    }
+
+    public void setRole(int role_id) {
+        this.role_id = role_id;
     }
 
     public String getUserName() {
@@ -105,9 +112,9 @@ public class User {
         this.state = state;
     }
 
-    public User(int id, Role role, String userName, String password, String firstName, String lastName, String phone, String email, String egn, double rating, short state) {
+    public User(int id, int role_id, String userName, String password, String firstName, String lastName, String phone, String email, String egn, double rating, short state) {
         this.id = id;
-        this.role = role;
+        this.role_id = role_id;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
